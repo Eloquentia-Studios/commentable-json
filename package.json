@@ -1,9 +1,9 @@
 {
-  "name": "commentable-json",
-  "version": "1.0.0",
+  "name": "@eloquentiastudios/commentable-json",
+  "version": "1.0.1",
   "description": "",
   "type": "module",
-  "main": "index.js",
+  "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "scripts": {
     "watch": "tsc --watch",
