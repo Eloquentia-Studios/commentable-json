@@ -4,10 +4,13 @@
   "description": "",
   "type": "module",
   "main": "index.js",
+  "types": "dist/index.d.ts",
   "scripts": {
     "watch": "tsc --watch",
+    "build": "tsc",
+    "start": "node ./dist/index.js",
     "dev": "nodemon ./dist/index.js",
-    "build": "tsc"
+    "prepublish": "npx rimraf -f dist && tsc"
   },
   "keywords": [],
   "authors": [
