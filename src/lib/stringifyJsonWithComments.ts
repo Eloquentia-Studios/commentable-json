@@ -1,11 +1,24 @@
 const stringifyJsonWithComments = (json: any, comments: any) => {
   const jsonStr = JSON.stringify(json, null, 2)
   const input = jsonStr.split('\n')
-  commentObj(input, comments, 0)
+  commentLine(input, comments, 0, true)
   return input.join('\n').trim()
 }
 
-const commentObj = (input: string[], comments: any, lineNumber: number): number => {
+const commentLine = (input: string[], comments: any, lineNumber: number, root = false): number => {
+  console.log('commentLine', lineNumber, input[lineNumber], comments)
+  const line = input[lineNumber].trim()
+  const key = getLineKey(line)
+  const comment = root ? comments : getComment(comments, key)
+  if (line.endsWith('{')) lineNumber = commentObj(input, comment, lineNumber)
+  else if (line.endsWith('[')) lineNumber = commentArray(input, comment, lineNumber)
+  else if (root) lineNumber = commentObj(input, comment, lineNumber)
+  else lineNumber = commentValue(input, comment, lineNumber)
+  return lineNumber
+}
+
+const commentObj = (input: string[], comments: any, lineNumber: number, inArray = false): number => {
+  console.log('commentObj', lineNumber, input[lineNumber], comments)
   lineNumber = commentRoot(input, comments, lineNumber)
 
   while (lineNumber < input.length) {
@@ -13,17 +26,17 @@ const commentObj = (input: string[], comments: any, lineNumber: number): number 
     const line = input[lineNumber].trim()
     if (line.startsWith('}')) break
 
-    const key = getLineKey(line)
-    const comment = getComment(comments, key)
-    if (key && line.endsWith('{')) lineNumber = commentObj(input, comment, lineNumber)
-    else if (key && line.endsWith('[')) lineNumber = commentArray(input, comment, lineNumber)
-    else if (key) lineNumber = commentValue(input, comment, lineNumber)
+    lineNumber = commentLine(input, comments, lineNumber)
   }
+
+  // Add a newline after the last line of an object in an array
+  if (inArray) input[lineNumber] += '\n'
 
   return lineNumber + 1
 }
 
 const commentArray = (input: string[], comments: any, lineNumber: number): number => {
+  console.log('commentArray', lineNumber, input[lineNumber], comments)
   lineNumber = commentRoot(input, comments, lineNumber)
 
   let arrayIndex = 0
@@ -31,11 +44,15 @@ const commentArray = (input: string[], comments: any, lineNumber: number): numbe
     const line = input[lineNumber].trim()
     if (line.startsWith(']')) break
 
+    const comment = getComment(comments, arrayIndex)
     if (line.endsWith('{')) {
-      lineNumber = commentObj(input, comments[arrayIndex], lineNumber)
+      lineNumber = commentObj(input, comment, lineNumber, true)
       arrayIndex++
     } else if (line.endsWith('[')) {
-      lineNumber = commentArray(input, comments[arrayIndex], lineNumber)
+      lineNumber = commentArray(input, comment, lineNumber)
+      arrayIndex++
+    } else {
+      lineNumber = commentValue(input, comment, lineNumber)
       arrayIndex++
     }
   }
@@ -63,8 +80,8 @@ const countIndent = (line: string): number => line.match(/^ */)?.[0].length || 0
 
 const getLineIndent = (line: string): string => ' '.repeat(countIndent(line))
 
-const getComment = (obj: any, key: string | undefined): string | undefined => {
-  if (!key) return undefined
+const getComment = (obj: any, key: any): any => {
+  if (key === undefined) return undefined
   if (obj && obj[key]) return obj[key]
   return undefined
 }
