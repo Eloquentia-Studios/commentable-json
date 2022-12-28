@@ -1,0 +1,23 @@
+{
+  "name": "commentable-json",
+  "version": "1.0.0",
+  "description": "",
+  "type": "module",
+  "main": "index.js",
+  "scripts": {
+    "watch": "tsc --watch",
+    "dev": "nodemon ./dist/app.js",
+    "build": "tsc"
+  },
+  "keywords": [],
+  "authors": [
+    "Esaias Cronelius <esaias@cronelius.se>",
+    "Felix Bjerhem Aronsson <felix.b.aronsson@gmail.com>"
+  ],
+  "license": "MIT",
+  "devDependencies": {
+    "@types/node": "^18.11.18",
+    "prettier": "^2.8.1",
+    "typescript": "^4.9.4"
+  }
+}
