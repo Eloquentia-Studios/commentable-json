@@ -22,7 +22,6 @@ const stringifyJsonWithComments = (json: any, comments: any) => {
  * @returns Line number after comment.
  */
 const commentLine = (input: string[], comments: any, lineNumber: number, root = false): number => {
-  console.log('commentLine', lineNumber, input[lineNumber], comments)
   const line = input[lineNumber].trim()
   const key = getLineKey(line)
   const comment = root ? comments : getComment(comments, key)
@@ -44,11 +43,9 @@ const commentLine = (input: string[], comments: any, lineNumber: number, root = 
  * @returns Line number after object.
  */
 const commentObj = (input: string[], comments: any, lineNumber: number, inArray = false): number => {
-  console.log('commentObj', lineNumber, input[lineNumber], comments)
   lineNumber = commentRoot(input, comments, lineNumber)
 
   while (lineNumber < input.length) {
-    console.log(lineNumber, input[lineNumber])
     const line = input[lineNumber].trim()
     if (line.startsWith('}')) break
 
@@ -70,7 +67,6 @@ const commentObj = (input: string[], comments: any, lineNumber: number, inArray 
  * @returns Line number after array.
  */
 const commentArray = (input: string[], comments: any, lineNumber: number): number => {
-  console.log('commentArray', lineNumber, input[lineNumber], comments)
   lineNumber = commentRoot(input, comments, lineNumber)
 
   let arrayIndex = 0
