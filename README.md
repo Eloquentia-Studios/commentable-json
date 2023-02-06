@@ -29,10 +29,10 @@ const commentsForObject = {
   baz: 'This is a comment for the baz property',
 }
 
-const jsonWithComments: typeof objectToBeCommented = stringifyJsonWithComments(objectToBeCommented, commentsForObject);
+const jsonWithComments = stringifyJsonWithComments(objectToBeCommented, commentsForObject);
 
 // Parse the JSON with comments to get the original object
-const parsedObject = parseJsonWithComments(jsonWithComments);
+const parsedObject: typeof objectToBeCommented = parseJsonWithComments(jsonWithComments);
 ```
 
 ## Supported Node.js Versions
